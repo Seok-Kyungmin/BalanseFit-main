@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- JAVA와 연결할 Mapper 파일 설정 -->
+<mapper namespace="com.balansefit.persistance.mapper.IDietMapper">
+
+    <!-- 식단 정보 리스트 -->
+    <select id="getDietList" parameterType="DietDTO" resultType="DietDTO">
+        SELECT *
+        FROM DIET
+        ORDER BY DIET_SEQ ASC
+    </select>
+
+    <!-- 식단 정보 등록 -->
+    <insert id="InsertDietInfo" parameterType="DietDTO">
+        INSERT INTO DIET(
+            DIET_SEQ, DIET_NAME, FOOD_M_1, FOOD_MC_1, FOOD_M_2, FOOD_MC_2, FOOD_M_3, FOOD_MC_3, FOOD_A_1, FOOD_AC_1, FOOD_A_2,
+            FOOD_AC_2, FOOD_A_3, FOOD_AC_3, FOOD_D_1, FOOD_DC_1, FOOD_D_2, FOOD_DC_2, FOOD_D_3, FOOD_DC_3, DIET_CALORIES,
+            USER_ID, REG_ID, REG_DT, CHG_ID, CHG_DT
+        )
+        VALUES (
+            (SELECT NULLIF (MAX(A.DIET_SEQ),0)+1 FROM DIET A), #{diet_name}, #{food_m_1}, #{food_mc_1}, #{food_m_2}, #{food_mc_2},
+            #{food_m_3}, #{food_mc_3}, #{food_a_1}, #{food_ac_1},#{food_a_2}, #{food_ac_2}, #{food_a_3}, #{food_ac_3}, #{food_d_1},
+            #{food_dc_1}, #{food_d_2}, #{food_dc_2},#{food_d_3}, #{food_dc_3},#{diet_calories}, #{user_id}, #{user_id},
+            SYSDATE(), #{user_id}, SYSDATE())
+
+    </insert>
+
+    <!-- 식단 정보 상세보기 -->
+    <select id="getDietInfo" resultType="DietDTO">
+        SELECT *
+        FROM DIET
+        WHERE DIET_SEQ = #{diet_seq}
+    </select>
+
+    <!-- 식단 정보 삭제 -->
+    <delete id="deleteDietInfo" parameterType="DietDTO">
+        DELETE FROM DIET
+        WHERE DIET_SEQ = #{diet_seq}
+    </delete>
+
+    <insert id="InsertDietFileInfo" parameterType="DietDTO">
+        INSERT INTO DIET
+            (DIET_SEQ, DIET_NAME, DIET_CALORIES,FOOD_NAME,FOOD_COUNT)
+        VALUES
+            (#{diet_name},#{diet_seq},#{diet_calories},#{food_name},#{food_number})
+
+    </insert>
+
+    <!-- 식단 정보 수정 -->
+    <update id="updateDietInfo" parameterType="DietDTO">
+        UPDATE DIET SET
+            DIET_SEQ = #{diet_seq},
+            DIET_NAME = #{diet_name},
+            FOOD_M_1 = #{food_m_1}, FOOD_MC_1 = #{food_mc_1}, FOOD_M_2 = #{food_m_2}, FOOD_MC_2 = #{food_mc_2}, FOOD_M_3 = #{food_m_3}, FOOD_MC_3 = #{food_mc_3},
+            FOOD_A_1 = #{food_a_1}, FOOD_AC_1 = #{food_ac_1}, FOOD_A_2 = #{food_a_2}, FOOD_AC_2 = #{food_ac_2}, FOOD_A_3 = #{food_a_3}, FOOD_AC_3 = #{food_ac_3},
+            FOOD_D_1 = #{food_d_1}, FOOD_DC_1 = #{food_dc_1}, FOOD_D_2 = #{food_d_2}, FOOD_DC_2 = #{food_dc_2}, FOOD_D_3 = #{food_d_3}, FOOD_DC_3 = #{food_dc_3},
+            DIET_CALORIES = #{diet_calories}
+        WHERE DIET_SEQ = #{diet_seq}
+    </update>
+
+    <!-- 음식 검색 -->
+    <select id="foodSearch" parameterType="DietDTO" resultType="DietDTO">
+        SELECT D.DIET_SEQ, D.DIET_NAME, D.FOOD_NAME, D.FOOD_COUNT, F.FOOD_NAME
+        FROM DIET D, FOOD F
+        WHERE D.FOOD_NAME = F.FOOD_NAME AND D.FOOD_NAME = #{food_name}
+    </select>
+
+
+</mapper>

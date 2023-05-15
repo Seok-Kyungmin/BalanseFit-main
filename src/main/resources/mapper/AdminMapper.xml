@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.balansefit.persistance.mapper.IAdminMapper">
+
+    <!-- 아이디로 회원 가입 중복 방지하기 -->
+    <select id="getAdminExists" parameterType="String" resultType="String">
+        SELECT IF(COUNT(1) = 0, 'N', 'Y') AS EXISTS_YN3
+        FROM ADMIN_INFO
+        WHERE ADM_ID = #{adm_id}
+    </select>
+
+    <!-- 이메일로 회원 가입 중복 방지하기 -->
+    <select id="getAdminExists2" parameterType="String" resultType="String">
+        SELECT IF(COUNT(1) = 0, 'N', 'Y') AS EXISTS_YN4
+        FROM ADMIN_INFO
+        WHERE ADM_EMAIL = #{adm_email}
+    </select>
+
+    <!---회원가입 로그인하기 -->
+    <select id="getAdminLoginCheck" parameterType="AdminInfoDTO" resultType="AdminInfoDTO">
+        SELECT ADM_ID,ADM_PW FROM ADMIN_INFO
+        WHERE ADM_ID = #{adm_id} AND ADM_PW = #{adm_pw}
+    </select>
+
+    <!-- 회원가입 로직 -->
+    <insert id="insertAdmin" parameterType="AdminInfoDTO">
+        INSERT INTO ADMIN_INFO (
+            ADM_ID,
+            ADM_PW,
+            ADM_NAME,
+            ADM_EMAIL
+        ) VALUES (
+                     #{adm_id},
+                     #{adm_pw},
+                     #{adm_name},
+                     #{adm_email}
+                 )
+    </insert>
+
+    <!-- 관리자 정보 찾아서 비밀번호 변경하기 -->
+    <update id="updateAdminPwdInfo" parameterType="AdminInfoDTO">
+        UPDATE
+            ADMIN_INFO
+        SET
+            ADM_PW=#{adm_pw}
+        WHERE
+            ADM_ID=#{adm_id}
+
+    </update>
+
+    <!-- 관리자 비번 찾기 이메일 -->
+    <select id="getFindAdminInfo" resultType="AdminInfoDTO">
+        SELECT
+            ADM_EMAIL
+        FROM
+            ADMIN_INFO
+        WHERE
+            ADM_EMAIL=#{adm_email}
+    </select>
+
+    <!-- 관리자 아이디 찾기 이메일 -->
+    <select id="getFindAdminID" resultType="AdminInfoDTO">
+        SELECT
+            ADM_ID
+        FROM
+            ADMIN_INFO
+        WHERE
+            ADM_EMAIL=#{adm_email}
+    </select>
+</mapper>

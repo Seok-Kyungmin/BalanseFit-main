@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- JAVA와 연결할 Mapper 파일 설정 -->
+<mapper namespace="com.balansefit.persistance.mapper.IFoodMapper">
+
+    <!-- 식품 정보 등록 -->
+    <insert id="insertFood" parameterType="FoodDTO">
+        INSERT INTO FOOD
+        VALUES
+        <!-- foreach는 insert 대량 삽입해주는 역활 -->
+        <foreach item="item" index="index" collection="list" separator=" , ">
+            (
+            #{item.food_name},
+            #{item.food_calories},
+            #{item.food_carbohydrate},
+            #{item.food_protein},
+            #{item.food_fat},
+            #{item.food_sugar},
+            #{item.food_natrium},
+            #{item.food_weight}
+            )
+        </foreach>
+    </insert>
+
+    <!-- 식품 리스트 -->
+    <select id="getFoodList" resultType="FoodDTO">
+        SELECT FOOD_SEQ, FOOD_NAME, FOOD_CALORIES
+        FROM FOOD
+        ORDER BY FOOD_SEQ ASC
+    </select>
+
+    <!-- 식품 추가 -->
+    <insert id="insertFoodInfo" parameterType="FoodDTO">
+        INSERT INTO FOOD(
+                              FOOD_SEQ, FOOD_NAME, FOOD_CALORIES, FOOD_CARBOHYDRATE, FOOD_PROTEIN, FOOD_FAT,
+                              FOOD_SUGAR, FOOD_NATRIUM, FOOD_WEIGHT, USER_ID, REG_ID, REG_DT, CHG_ID, CHG_DT)
+        VALUES (
+                (SELECT NULLIF(MAX(A.FOOD_SEQ), 0) + 1 FROM FOOD A),
+                #{food_name}, #{food_calories}, #{food_carbohydrate}, #{food_protein}, #{food_fat},
+                #{food_sugar}, #{food_natrium}, #{food_weight}, #{user_id}, #{user_id}, SYSDATE(), #{user_id},SYSDATE())
+    </insert>
+
+    <!-- 식품 상세보기 -->
+    <select id="getFoodInfo" parameterType="FoodDTO" resultType="FoodDTO">
+        SELECT *
+        FROM FOOD
+        WHERE FOOD_SEQ = #{food_seq}
+    </select>
+
+    <!-- 식품 삭제 쿼리 -->
+    <delete id="deleteFoodInfo" parameterType="FoodDTO">
+        DELETE FROM FOOD
+        WHERE FOOD_SEQ = #{food_seq}
+    </delete>
+</mapper>

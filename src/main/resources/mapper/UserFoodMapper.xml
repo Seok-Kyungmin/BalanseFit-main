@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- JAVA와 연결할 Mapper 파일 설정 -->
+<mapper namespace="com.balansefit.persistance.mapper.IUserFoodMapper">
+
+    <!-- 식품 리스트 -->
+    <select id="getUserFoodList" resultType="FoodDTO">
+        SELECT FOOD_SEQ, FOOD_NAME, FOOD_CALORIES
+        FROM FOOD
+        ORDER BY FOOD_SEQ ASC
+    </select>
+
+    <!-- 식품 상세보기 -->
+    <select id="getUserFoodInfo" parameterType="FoodDTO" resultType="FoodDTO">
+        SELECT *
+        FROM FOOD
+        WHERE FOOD_SEQ = #{food_seq}
+    </select>
+</mapper>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.balansefit.persistance.mapper.IUserInfoMapper">
+
+    <!-- 아이디로 회원 가입 중복 방지하기 -->
+    <select id="getUserExists" parameterType="String" resultType="String">
+        SELECT IF(COUNT(1) = 0, 'N', 'Y') AS EXISTS_YN
+        FROM USER_INFO
+        WHERE USER_ID = #{user_id}
+    </select>
+
+    <!-- 이메일로 회원 가입 중복 방지하기 -->
+    <select id="getUserExists2" parameterType="String" resultType="String">
+        SELECT IF(COUNT(1) = 0, 'N', 'Y') AS EXISTS_YN2
+        FROM USER_INFO
+        WHERE USER_EMAIL = #{user_email}
+    </select>
+
+    <!---회원가입 로그인하기 -->
+    <select id="getUserLoginCheck" parameterType="UserInfoDTO" resultType="UserInfoDTO">
+        SELECT USER_ID,USER_PW
+        FROM USER_INFO
+        WHERE USER_ID = #{user_id} AND USER_PW = #{user_pw}
+    </select>
+
+    <!-- 회원가입 로직 -->
+    <insert id="insertUser" parameterType="UserInfoDTO">
+        INSERT INTO USER_INFO (
+            USER_ID,
+            USER_PW,
+            USER_NAME,
+            USER_EMAIL,
+            USER_AGE,
+            USER_GENDER,
+            USER_HEIGHT,
+            USER_WEIGHT
+        ) VALUES (
+                     #{user_id},
+                     #{user_pw},
+                     #{user_name},
+                     #{user_email},
+                     #{user_age},
+                     #{user_gender},
+                     #{user_height},
+                     #{user_weight}
+
+                 )
+    </insert>
+
+    <!-- 카카오 로그인 -->
+    <select id="kakaoLoginForDgService" resultType="KakaoDTO">
+        SELECT
+            USER_ID,
+            USER_PW,
+            USER_NAME
+        FROM
+            USER_INFO
+        WHERE
+            USER_ID=#{kakaoMail}
+    </select>
+
+    <!-- 유저 정보 찾아서 비밀번호 변경하기 -->
+    <update id="updateUserPwdInfo" parameterType="UserInfoDTO">
+        UPDATE
+            USER_INFO
+        SET
+            USER_PW=#{user_pw}
+        WHERE
+            USER_ID=#{user_id}
+
+    </update>
+
+    <!-- 유저 비번 찾기 이메일 -->
+    <select id="getFindUserInfo" resultType="UserInfoDTO">
+        SELECT
+            USER_EMAIL
+        FROM
+            USER_INFO
+        WHERE
+            USER_EMAIL=#{user_email}
+    </select>
+
+    <!-- 유저 아이디 찾기 이메일 -->
+    <select id="getFindUserID" resultType="UserInfoDTO">
+        SELECT
+            USER_ID
+        FROM
+            USER_INFO
+        WHERE
+            USER_EMAIL=#{user_email}
+    </select>
+
+    <!-- 마이 페이지 사용자 정보 찾기 -->
+    <select id="getUserInfo" resultType="UserInfoDTO">
+        SELECT U.USER_ID, U.USER_NAME, U.USER_EMAIL, U.USER_AGE, U.USER_GENDER, U.USER_HEIGHT,
+               U.USER_WEIGHT
+
+        FROM USER_INFO U
+        WHERE U.USER_ID = #{user_id}
+    </select>
+
+</mapper>

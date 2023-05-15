@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- JAVA와 연결할 Mapper 파일 설정 -->
+<mapper namespace="com.balansefit.persistance.mapper.IRecipeMapper">
+
+    <!-- 레시피 정보 등록 -->
+    <insert id="insertRecipe" parameterType="RecipeDTO">
+        INSERT INTO RECIPE
+        VALUES
+        <!-- foreach는 insert 대량 삽입해주는 역활 -->
+        <foreach item="jobj" index="index" collection="list" separator=" , ">
+            (
+            #{jobj.rcp_seq},
+            #{jobj.rcp_nm},
+            #{jobj.rcp_wgt}
+            #{jobj.info_wgt}
+            #{jobj.info_eng}
+            #{jobj.info_car}
+            #{jobj.info_pro}
+            #{jobj.info_fat}
+            #{jobj.info_na}
+            #{jobj.rcp_parts_dtls}
+            #{jobj.manual01}
+            #{jobj.manual02}
+            #{jobj.manual03}
+            #{jobj.manual04}
+            #{jobj.manual05}
+            #{jobj.manual06}
+            #{jobj.manual07}
+            #{jobj.manual08}
+            #{jobj.manual09}
+            #{jobj.manual10}
+            #{jobj.manual11}
+            #{jobj.manual12}
+            #{jobj.manual13}
+            #{jobj.manual14}
+            #{jobj.manual15}
+            #{jobj.manual16}
+            #{jobj.manual17}
+            #{jobj.manual18}
+            #{jobj.manual19}
+            #{jobj.manual20}
+            )
+        </foreach>
+    </insert>
+
+</mapper>

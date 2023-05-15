@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- JAVA와 연결할 Mapper 파일 설정 -->
+<mapper namespace="com.balansefit.persistance.mapper.IExerciseMapper">
+
+    <!-- 운동 정보 리스트 -->
+    <select id="getExerciseList" resultType="ExerciseDTO">
+        SELECT EXERCISE_SEQ, EXERCISE_NAME, EXERCISE_TYPE, EXERCISE_MET
+        FROM EXERCISE
+        ORDER BY EXERCISE_SEQ ASC
+    </select>
+
+
+    <!-- 운동 정보 상세보기 -->
+    <select id="getExerciseInfo" parameterType="ExerciseDTO" resultType="ExerciseDTO">
+        SELECT *
+        FROM EXERCISE
+        WHERE EXERCISE_SEQ = #{exercise_seq}
+    </select>
+
+    <!-- 운동 정보 등록 -->
+    <insert id="insertExerciseInfo" parameterType="ExerciseDTO">
+        INSERT INTO EXERCISE(
+                             EXERCISE_SEQ, EXERCISE_NAME, EXERCISE_TYPE, EXERCISE_MET, USER_ID,
+                             REG_ID, REG_DT, CHG_ID, CHG_DT)
+            VALUES (
+                (SELECT NULLIF (MAX(A.EXERCISE_SEQ),0)+1 FROM EXERCISE A),
+                #{exercise_name}, #{exercise_type}, #{exercise_met}, #{user_id}, #{user_id}, SYSDATE(),
+                    #{user_id}, SYSDATE())
+    </insert>
+
+    <!-- 운동 정보 수정 -->
+    <update id="updateExerciseInfo" parameterType="ExerciseDTO">
+        UPDATE EXERCISE SET
+            EXERCISE_NAME = #{exercise_name},
+            EXERCISE_TYPE = #{exercise_type},
+            EXERCISE_MET  = #{exercise_met},
+            CHG_ID = #{user_id},
+            CHG_DT = SYSDATE()
+        WHERE EXERCISE_SEQ = #{exercise_seq}
+    </update>
+
+    <!-- 운동 정보 삭제 -->
+    <delete id="deleteExerciseInfo" parameterType="ExerciseDTO">
+        DELETE FROM EXERCISE
+        WHERE EXERCISE_SEQ = #{exercise_seq}
+    </delete>
+
+</mapper>

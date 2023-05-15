@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- JAVA와 연결할 Mapper 파일 설정 -->
+<mapper namespace="com.balansefit.persistance.mapper.IMyPageMapper">
+
+    <!-- 프로필 리스트 -->
+    <select id="getUserInfoList" resultType="UserInfoDTO">
+        SELECT USER_NAME,
+               USER_WEIGHT,
+               USER_HEIGHT,
+               USER_GENDER,
+               USER_AGE,
+               USER_BM,
+               USER_RC,
+               TARGET_WEIGHT,
+               USER_BMI
+        FROM USER_INFO
+    </select>
+
+    <!-- 프로필 글 수정 -->
+    <update id="updateUserInfo" parameterType="UserInfoDTO">
+        UPDATE USER_INFO SET
+            USER_NAME = #{user_name},
+            USER_EMAIL = #{user_email},
+            USER_AGE = #{user_age},
+            USER_GENDER = #{user_gender},
+            USER_HEIGHT = #{user_height},
+            USER_WEIGHT = #{user_weight}
+        WHERE USER_ID = #{user_id}
+    </update>
+
+    <!-- 회원 탈퇴 -->
+    <delete id="userDelete" parameterType="UserInfoDTO">
+        DELETE FROM USER_INFO
+        WHERE USER_ID = #{user_id}
+    </delete>
+
+    <!-- 일일 몸무게 리스트 -->
+    <select id="getWeightList" parameterType="UserInfoDTO" resultType="UserWeightDTO">
+        SELECT W.CURRENT_W, W.USER_ID, DATE_FORMAT(W.WEIGHT_DT, '%m월%d일') AS WEIGHT_DT
+        FROM USER_WEIGHT W
+        WHERE W.USER_ID = #{user_id}
+        ORDER BY W.WEIGHT_DT ASC
+    </select>
+
+     <!-- 이미지 파일 업로드 -->
+<!--    <insert id="write" parameterMap="UserInfoDTO">-->
+<!--        INSERT INTO USER_INFO(-->
+<!--                              FILE_NAME, FILE_PATH-->
+<!--        ) VALUES (-->
+<!--                  #{file_name},-->
+<!--                  #{file_path}-->
+<!--                         )-->
+<!--    </insert>-->
+
+</mapper>
+
